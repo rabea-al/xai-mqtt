@@ -49,12 +49,8 @@ jobs:
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
         fi
 
-    - name: Install Mosquitto MQTT
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y mosquitto mosquitto-clients
-        sudo systemctl enable mosquitto
-        sudo systemctl start mosquitto
+    - name: List Xircuits
+      run: xircuits list
 
     - name: Clone Repository
       run: |
@@ -74,6 +70,13 @@ jobs:
         else
           echo "requirements.txt not found."
         fi
+
+    - name: Install Mosquitto MQTT
+      run: |
+          sudo apt-get update
+          sudo apt-get install -y mosquitto mosquitto-clients
+          sudo systemctl enable mosquitto
+          sudo systemctl start mosquitto
 
     - name: Run Python script and MQTT in parallel
       run: |
