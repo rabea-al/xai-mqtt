@@ -134,7 +134,7 @@ jobs:
         fi
 
         echo "MQTT and Python script test completed." >> $LOG_FILE
-        fi
+        
 
     - name: Upload log file
       if: always()
