@@ -102,10 +102,10 @@ jobs:
         echo "Starting MQTT subscriber to listen for 'testing_reply' topic..." >> $LOG_FILE
         mosquitto_sub -h localhost -p 1883 -t "testing_reply" -C 1 > output.txt 2>> $LOG_FILE &
         SUB_PID=$!
-
-        # Publish the MQTT message "trigger" to "my/topic"
-        echo "Publishing MQTT message 'trigger' to topic 'my/topic'..." >> $LOG_FILE
-        mosquitto_pub -h localhost -p 1883 -t "my/topic" -m "trigger" 2>> $LOG_FILE
+        sleep 5
+        # Publish the MQTT message "trigger" to "testing"
+        echo "Publishing MQTT message 'trigger' to topic 'testing'..." >> $LOG_FILE
+        mosquitto_pub -h localhost -p 1883 -t "tessting" -m "trigger" 2>> $LOG_FILE
         sleep 5
 
         # Wait for the subscriber to receive the message
