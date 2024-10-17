@@ -105,7 +105,7 @@ jobs:
         sleep 5
         # Publish the MQTT message "trigger" to "testing"
         echo "Publishing MQTT message 'trigger' to topic 'testing'..." >> $LOG_FILE
-        mosquitto_pub -h localhost -p 1883 -t "tessting" -m "trigger" 2>> $LOG_FILE
+        mosquitto_pub -h localhost -p 1883 -t "testing" -m "trigger" 2>> $LOG_FILE
         sleep 5
 
         # Wait for the subscriber to receive the message
