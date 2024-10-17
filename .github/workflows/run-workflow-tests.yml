@@ -78,19 +78,19 @@ jobs:
           sudo systemctl enable mosquitto
           sudo systemctl start mosquitto
 
-    - name: Run Python script and MQTT in parallel
+    - name: Test .xircuits Workflows
       run: |
-        LOG_FILE="${GITHUB_WORKSPACE}/mqtt_test_log.txt"
-        echo "Starting MQTT and Python script test..." > $LOG_FILE
-
-        # Run the Python script in the background
         export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH}"
-        FULL_PATH="${COMPONENT_LIBRARY_PATH}/${TEST_XIRCUITS}"
-        echo "Running Python script: ${FULL_PATH%.*}.py" >> $LOG_FILE
-        xircuits compile $FULL_PATH "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE
-        python "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE &
-        PYTHON_PID=$!
+        LOG_FILE="${GITHUB_WORKSPACE}/workflow_logs.txt"
+        TEST_FILES=$(echo "$TEST_XIRCUITS" | tr '\n' ' ')
+        echo "Repository: $LIBRARY_NAME" > $LOG_FILE
+        echo "Branch: $BRANCH_NAME" >> $LOG_FILE
+        echo -e "Testing Files:\n$TEST_FILES" >> $LOG_FILE
 
+        xircuits compile $FULL_PATH "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE
+        python "${FULL_PATH%.*}.py" 2>&1 | tee -a $WORKFLOW_LOG_FILE &
+        PYTHON_PID=$!
+        
         # Wait for Python script to start (adjust as needed)
         echo "Waiting 10 seconds for the Python script to initialize..." >> $LOG_FILE
         sleep 10
@@ -103,6 +103,7 @@ jobs:
         # Publish the MQTT message "trigger" to "my/topic"
         echo "Publishing MQTT message 'trigger' to topic 'my/topic'..." >> $LOG_FILE
         mosquitto_pub -h localhost -p 1883 -t "my/topic" -m "trigger" 2>> $LOG_FILE
+        sleep 5
 
         # Wait for the subscriber to receive the message
         echo "Waiting for MQTT subscriber to receive message..." >> $LOG_FILE
@@ -130,6 +131,7 @@ jobs:
         fi
 
         echo "MQTT and Python script test completed." >> $LOG_FILE
+        fi
 
     - name: Upload log file
       if: always()
