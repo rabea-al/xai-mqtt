@@ -47,6 +47,7 @@ jobs:
           echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
         else
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        fi
 
     - name: Install Mosquitto MQTT
       run: |
