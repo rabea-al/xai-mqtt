@@ -16,7 +16,7 @@ jobs:
         python-version: ["3.9", "3.10", "3.11"]
     env:
       TEST_XIRCUITS: |
-        examples/mqtt_Example.xircuits
+        examples/mqtt_sample.xircuits
 
     steps:
     - name: Checkout Repository
