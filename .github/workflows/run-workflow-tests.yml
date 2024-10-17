@@ -84,6 +84,7 @@ jobs:
         export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH}"
         FULL_PATH="${COMPONENT_LIBRARY_PATH}/${TEST_XIRCUITS}"
         echo "Running Python script: ${FULL_PATH%.*}.py" >> $LOG_FILE
+        xircuits compile $FULL_PATH "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE
         python "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE &
         PYTHON_PID=$!
 
