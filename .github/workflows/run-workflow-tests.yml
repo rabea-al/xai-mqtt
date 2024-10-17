@@ -80,15 +80,18 @@ jobs:
 
     - name: Test .xircuits Workflows
       run: |
-        export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH}"
         LOG_FILE="${GITHUB_WORKSPACE}/workflow_logs.txt"
-        TEST_FILES=$(echo "$TEST_XIRCUITS" | tr '\n' ' ')
-        echo "Repository: $LIBRARY_NAME" > $LOG_FILE
-        echo "Branch: $BRANCH_NAME" >> $LOG_FILE
-        echo -e "Testing Files:\n$TEST_FILES" >> $LOG_FILE
-
+        echo "Starting MQTT and Python script test..." > $LOG_FILE
+                
+        # Run xircuits compile command and log output
+        FULL_PATH="${COMPONENT_LIBRARY_PATH}/${TEST_XIRCUITS}"
+        echo "Compiling Xircuits workflow: ${FULL_PATH}" >> $LOG_FILE
         xircuits compile $FULL_PATH "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE
-        python "${FULL_PATH%.*}.py" 2>&1 | tee -a $WORKFLOW_LOG_FILE &
+        
+        # Run the Python script in the background
+        export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH}"
+        echo "Running Python script: ${FULL_PATH%.*}.py" >> $LOG_FILE
+        python "${FULL_PATH%.*}.py" 2>&1 | tee -a $LOG_FILE &
         PYTHON_PID=$!
         
         # Wait for Python script to start (adjust as needed)
