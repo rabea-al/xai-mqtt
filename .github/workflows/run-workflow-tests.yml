@@ -48,8 +48,8 @@ jobs:
           else
             echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
           fi
-    - name: List Xircuits
-      run: xircuits list
+    - name: Init Xircuits
+      run: xircuits init
   
     - name: Clone Repository
       run: |
@@ -79,9 +79,9 @@ jobs:
         echo "persistence true" | sudo tee -a /etc/mosquitto/conf.d/default.conf
         echo "persistent_client_expiration 1h" | sudo tee -a /etc/mosquitto/conf.d/default.conf
         mosquitto -c /etc/mosquitto/mosquitto.conf -d
-   
+
     - name: Wait for Mosquitto to Initialize
-      run: sleep 10
+      run: sleep 15
 
     - name: Test .xircuits Workflows
       run: |
